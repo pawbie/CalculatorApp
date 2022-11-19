@@ -6,13 +6,19 @@ namespace CalculatorProgram
 {
     public class Calculator
     {
+        // Log and diagnostic fields
         JsonWriter writer;
         StreamWriter logFile;
+
+        // Operations amount tracker
+        public int OperationsCount { get; private set; }
 
         public Calculator()
         {
             InitializeDiagnosticTrace("calculator.log");
             InitializeJsonWriter("calculatorlog.json");
+
+            OperationsCount = 0;
         }
 
         private void InitializeDiagnosticTrace(string fileName)
@@ -86,6 +92,8 @@ namespace CalculatorProgram
                 default:
                     break;
             }
+            if (double.IsNaN(result) == false) OperationsCount++;
+
             writer.WritePropertyName("Result");
             writer.WriteValue(result);
             writer.WriteEndObject();
