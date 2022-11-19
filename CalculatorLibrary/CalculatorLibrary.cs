@@ -7,16 +7,30 @@ namespace CalculatorProgram
     public class Calculator
     {
         JsonWriter writer;
+        StreamWriter logFile;
+
         public Calculator()
         {
-            StreamWriter logFile = File.CreateText("calculator.log");
+            InitializeDiagnosticTrace("calculator.log");
+            InitializeJsonWriter("calculatorlog.json");
+        }
+
+        private void InitializeDiagnosticTrace(string fileName)
+        {
+            StreamWriter logFile = File.CreateText(fileName);
+
             Trace.Listeners.Add(new TextWriterTraceListener(logFile));
             Trace.AutoFlush = true;
+
             Trace.WriteLine("Starting Calculator Log");
             Trace.WriteLine(String.Format("Started {0}", System.DateTime.Now.ToString()));
+        }
 
-            StreamWriter logFileJson = File.CreateText("calculatorlog.json");
+        private void InitializeJsonWriter(string fileName)
+        {
+            StreamWriter logFileJson = File.CreateText(fileName);
             logFileJson.AutoFlush = true;
+
             writer = new JsonTextWriter(logFileJson);
             writer.Formatting = Formatting.Indented;
             writer.WriteStartObject();
