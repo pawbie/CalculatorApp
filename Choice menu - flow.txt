@@ -1,0 +1,11 @@
+Parameter - list of touples (string key, string itemText) menuItems
+
+var {selectedItem} = 1
+
+while {selectedItem > 0}
+foreach {menuItem in menuItems}
+ write {itemText}
+ {userChoice} = readLine
+ selectedItem = indexOf menuItem where key = {userChoice}
+
+return selectedItem

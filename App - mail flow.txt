@@ -1,0 +1,32 @@
+Show main menu prompt
+
+1. Perform operation
+2. List past operations with operations count
+3. Delete calculations history
+4. Exit application
+
+if {performOperation}
+	get number1 or cancel
+      get number2 or cancel
+      
+      show operation type prompt
+		if operation selected
+			HandleOperation()
+			if {operationSuccessfull}
+				print result
+      		else print error
+		else if cancel
+			back to main menu	
+
+      prompt "type any key to continue"
+if {listPastOperations}
+	list {operation = result}
+      write {totalOperationCount}
+
+	prompt "type any key to continue"
+
+if {deleteCalculationsHistory}
+   write deletion confirmation prompt
+   prompt "type any key to continue"
+if {exitApplication}
+	close application

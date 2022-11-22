@@ -51,7 +51,7 @@ namespace CalculatorProgram
             writer.Close();
         }
 
-        public double DoOperation(double num1, double num2, string op)
+        public double DoOperation(double num1, double num2, int op)
         {
             double result = double.NaN; // Default value is "not-a-number" if an operation, such as division, could result in an error.
             writer.WriteStartObject();
@@ -64,22 +64,22 @@ namespace CalculatorProgram
             // Use a switch statement to do the math.
             switch (op)
             {
-                case "a":
+                case 0:
                     result = num1 + num2;
                     Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
                     writer.WriteValue("Add");
                     break;
-                case "s":
+                case 1:
                     result = num1 - num2;
                     Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
                     writer.WriteValue("Subtract");
                     break;
-                case "m":
+                case 2:
                     result = num1 * num2;
                     writer.WriteValue("Multiply");
                     Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
                     break;
-                case "d":
+                case 3:
                     // Ask the user to enter a non-zero divisor.
                     if (num2 != 0)
                     {

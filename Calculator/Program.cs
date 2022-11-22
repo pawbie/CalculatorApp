@@ -3,6 +3,7 @@ using CalculatorProgram;
 using System.IO;
 using System.Diagnostics;
 
+
 namespace CalculatorProgram
 {
     class Program
@@ -45,14 +46,14 @@ namespace CalculatorProgram
                 }
 
                 // Ask the user to choose an operator.
-                Console.WriteLine("Choose an operator from the following list:");
-                Console.WriteLine("\ta - Add");
-                Console.WriteLine("\ts - Subtract");
-                Console.WriteLine("\tm - Multiply");
-                Console.WriteLine("\td - Divide");
-                Console.Write("Your option? ");
-
-                string op = Console.ReadLine();
+                (string, string)[] operationChoices = new[] 
+                { 
+                    ("a", "Add"),
+                    ("s", "Substract"),
+                    ("m", "Multiply"),
+                    ("d", "Divide")
+                };
+                int op = UserInput.PromptChoice("Choose an operator from the following list:", operationChoices);
 
                 try
                 {
