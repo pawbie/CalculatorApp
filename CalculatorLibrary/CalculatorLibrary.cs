@@ -7,8 +7,11 @@ namespace CalculatorProgram
     public class Calculator
     {
         // Log and diagnostic fields
-        JsonWriter writer;
-        StreamWriter logFile;
+        private JsonWriter _writer;
+        private StreamWriter _logFile;
+
+        // Calculations list
+        private List<Calculation> _completedCalculations;
 
         // Operations amount tracker
         public int OperationsCount { get; private set; }
@@ -18,7 +21,16 @@ namespace CalculatorProgram
             InitializeDiagnosticTrace("calculator.log");
             InitializeJsonWriter("calculatorlog.json");
 
+            _completedCalculations = new();
             OperationsCount = 0;
+        }
+
+        public IEnumerable<(string, double)> ListCompletedCalculations()
+        {
+            foreach (var calculation in _completedCalculations)
+            {
+                yield return (calculation.Equation, calculation.Result);
+            }
         }
 
         private void InitializeDiagnosticTrace(string fileName)
@@ -37,66 +49,76 @@ namespace CalculatorProgram
             StreamWriter logFileJson = File.CreateText(fileName);
             logFileJson.AutoFlush = true;
 
-            writer = new JsonTextWriter(logFileJson);
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartObject();
-            writer.WritePropertyName("Operations");
-            writer.WriteStartArray();
+            _writer = new JsonTextWriter(logFileJson);
+            _writer.Formatting = Formatting.Indented;
+            _writer.WriteStartObject();
+            _writer.WritePropertyName("Operations");
+            _writer.WriteStartArray();
         }
 
         public void Finish()
         {
-            writer.WriteEndArray();
-            writer.WriteEndObject();
-            writer.Close();
+            _writer.WriteEndArray();
+            _writer.WriteEndObject();
+            _writer.Close();
         }
 
         public double DoOperation(double num1, double num2, int op)
         {
-            double result = double.NaN; // Default value is "not-a-number" if an operation, such as division, could result in an error.
-            writer.WriteStartObject();
-            writer.WritePropertyName("Operand1");
-            writer.WriteValue(num1);
-            writer.WritePropertyName("Operand2");
-            writer.WriteValue(num2);
-            writer.WritePropertyName("Operation");
+            // Default value is "not-a-number" if an operation, such as division, could result in an error.
+            double result = double.NaN;
+            string calculation = "";
+
+            _writer.WriteStartObject();
+            _writer.WritePropertyName("Operand1");
+            _writer.WriteValue(num1);
+            _writer.WritePropertyName("Operand2");
+            _writer.WriteValue(num2);
+            _writer.WritePropertyName("Operation");
 
             // Use a switch statement to do the math.
             switch (op)
             {
                 case 0:
                     result = num1 + num2;
-                    Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
-                    writer.WriteValue("Add");
+                    calculation = $"{num1} + {num2}";
+                    Trace.WriteLine($"{calculation} = {result}");
+                    _writer.WriteValue("Add");
                     break;
                 case 1:
                     result = num1 - num2;
-                    Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
-                    writer.WriteValue("Subtract");
+                    calculation = $"{num1} - {num2}";
+                    Trace.WriteLine($"{calculation} = {result}");
+                    _writer.WriteValue("Subtract");
                     break;
                 case 2:
                     result = num1 * num2;
-                    writer.WriteValue("Multiply");
-                    Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
+                    calculation = $"{num1} * {num2}";
+                    _writer.WriteValue("Multiply");
+                    Trace.WriteLine($"{calculation} = {result}");
                     break;
                 case 3:
                     // Ask the user to enter a non-zero divisor.
                     if (num2 != 0)
                     {
                         result = num1 / num2;
-                        Trace.WriteLine(String.Format("{0} + {1} = {2}", num1, num2, result));
+                        calculation = $"{num1} / {num2}";
+                        Trace.WriteLine($"{calculation} = {result}");
                     }
-                    writer.WriteValue("Divide");
+                    _writer.WriteValue("Divide");
                     break;
                 // Return text for an incorrect option entry.
                 default:
                     break;
             }
-            if (double.IsNaN(result) == false) OperationsCount++;
+            if (double.IsNaN(result) == false) {
+                _completedCalculations.Add(new Calculation(calculation, result));
+                OperationsCount++;
+             };
 
-            writer.WritePropertyName("Result");
-            writer.WriteValue(result);
-            writer.WriteEndObject();
+            _writer.WritePropertyName("Result");
+            _writer.WriteValue(result);
+            _writer.WriteEndObject();
 
             return result;
         }

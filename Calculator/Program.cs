@@ -10,76 +10,35 @@ namespace CalculatorProgram
     {
         static void Main(string[] args)
         {
+            // Declare main variables
             bool endApp = false;
-            // Display title as the C# console calculator app.
-            Console.WriteLine("Console Calculator in C#\r");
-            Console.WriteLine("------------------------\n");
-
-            Calculator calculator = new();
+            int mainMenuChoice = 0;
+            
             while (!endApp)
             {
-                // Declare variables and set to empty.
-                string numInput1 = "";
-                string numInput2 = "";
-                double result = 0;
+                // Display main menu and get user choice
+                mainMenuChoice = CalculatorLogic.GetMainMenuChoice();
 
-                // Ask the user to type the first number.
-                Console.Write("Type a number, and then press Enter: ");
-                numInput1 = Console.ReadLine();
-
-                double cleanNum1 = 0;
-                while (!double.TryParse(numInput1, out cleanNum1))
+                switch (mainMenuChoice)
                 {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
-                    numInput1 = Console.ReadLine();
+                    case 0:
+                        CalculatorLogic.HandleMathOperation();
+                        break;
+                    case 1:
+                        CalculatorLogic.PrintCalculationsSummary();
+                        break;
+                    default:
+                        endApp = true;
+                        break;
                 }
 
-                // Ask the user to type the second number.
-                Console.Write("Type another number, and then press Enter: ");
-                numInput2 = Console.ReadLine();
-
-                double cleanNum2 = 0;
-                while (!double.TryParse(numInput2, out cleanNum2))
+                if (!endApp)
                 {
-                    Console.Write("This is not valid input. Please enter an integer value: ");
-                    numInput2 = Console.ReadLine();
+                    Console.WriteLine("\nPress ANY KEY to continue...");
+                    Console.ReadKey();
                 }
 
-                // Ask the user to choose an operator.
-                (string, string)[] operationChoices = new[] 
-                { 
-                    ("a", "Add"),
-                    ("s", "Substract"),
-                    ("m", "Multiply"),
-                    ("d", "Divide")
-                };
-                int op = UserInput.PromptChoice("Choose an operator from the following list:", operationChoices);
-
-                try
-                {
-                    result = calculator.DoOperation(cleanNum1, cleanNum2, op);
-                    if (double.IsNaN(result))
-                    {
-                        Console.WriteLine("This operation will result in a mathematical error.\n");
-                    }
-                    else Console.WriteLine("Your result: {0:0.##}\n", result);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
-                }
-
-                Console.WriteLine("------------------------\n");
-
-                // Wait for the user to respond before closing.
-                Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
-                if (Console.ReadLine() == "n") endApp = true;
-
-                Console.WriteLine("\n"); // Friendly linespacing.
             }
-
-            calculator.Finish();
-            return;
         }
     }
 }

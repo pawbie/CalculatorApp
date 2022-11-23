@@ -8,13 +8,8 @@ namespace CalculatorProgram
 {
     public class UserInput
     {
-        private static void ClearCurrentLine()
-        {
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.BufferWidth));
-            Console.SetCursorPosition(0, Console.CursorTop);
-        }
-        public static double PromptTypeNumber(string message)
+        
+        public static double PromptTypeNumber(string message, string errorMessage)
         {
             string numInput;
 
@@ -26,7 +21,7 @@ namespace CalculatorProgram
             double cleanNum = 0;
             while (!double.TryParse(numInput, out cleanNum))
             {
-                Console.Write("This is not valid input. Please enter an integer value: ");
+                Console.Write(errorMessage);
                 numInput = Console.ReadLine();
             }
 
@@ -60,7 +55,7 @@ namespace CalculatorProgram
                     {
                         currentChoice = userChoice;
 
-                        ClearCurrentLine();
+                        CalculatorUI.ClearCurrentLine();
                         Console.Write($"Your option: {currentChoice}");
                         choiceCorrect = true;
                     }
@@ -80,7 +75,7 @@ namespace CalculatorProgram
                     {
                         currentChoice = userConfirmationChoice.KeyChar.ToString();
 
-                        ClearCurrentLine();
+                        CalculatorUI.ClearCurrentLine();
                         Console.Write($"Your option: {currentChoice}");
                         choiceCorrect = true;
 
