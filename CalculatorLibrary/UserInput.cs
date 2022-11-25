@@ -28,7 +28,25 @@ namespace CalculatorProgram
             return cleanNum;
         }
 
-        public static int PromptChoice(string message, (string, string)[] choices)
+        public static bool PromptContinue(string message)
+        {
+            var userInput = "";
+
+            while (userInput.ToLower() != "y" && userInput.ToLower() != "n")
+            {
+                if (string.IsNullOrEmpty(userInput) == false)
+                {
+                    CalculatorUI.ClearLine(-1);
+                }
+
+                Console.Write($"{message} [y/n]: ");
+                userInput = Console.ReadLine();
+            }
+
+            return userInput.ToLower() == "y";
+        }
+
+        public static string PromptChoice(string message, (string choiceLetter, string choiceDescription, string choiceAction)[] choices)
         {
             bool choiceConfirmed;
             bool choiceCorrect;
@@ -39,7 +57,7 @@ namespace CalculatorProgram
             Console.WriteLine();
             foreach (var choice in choices)
             {
-                Console.WriteLine($"{choice.Item1} - {choice.Item2}");
+                Console.WriteLine($"{choice.choiceLetter} - {choice.choiceDescription}");
             }
             Console.Write($"Your option: {currentChoice}");
 
@@ -51,11 +69,11 @@ namespace CalculatorProgram
                 while (choiceCorrect == false)
                 {
                     var userChoice = Console.ReadKey(true).KeyChar.ToString();
-                    if (choices.Select(x => x.Item1).ToArray().Contains(userChoice))
+                    if (choices.Select(x => x.choiceLetter).ToArray().Contains(userChoice))
                     {
                         currentChoice = userChoice;
 
-                        CalculatorUI.ClearCurrentLine();
+                        CalculatorUI.ClearLine();
                         Console.Write($"Your option: {currentChoice}");
                         choiceCorrect = true;
                     }
@@ -71,11 +89,11 @@ namespace CalculatorProgram
                         choiceCorrect = true;
                         choiceConfirmed = true;
                     }
-                    else if (choices.Select(x => x.Item1).ToArray().Contains(userConfirmationChoice.KeyChar.ToString()))
+                    else if (choices.Select(x => x.choiceLetter).ToArray().Contains(userConfirmationChoice.KeyChar.ToString()))
                     {
                         currentChoice = userConfirmationChoice.KeyChar.ToString();
 
-                        CalculatorUI.ClearCurrentLine();
+                        CalculatorUI.ClearLine();
                         Console.Write($"Your option: {currentChoice}");
                         choiceCorrect = true;
 
@@ -84,7 +102,7 @@ namespace CalculatorProgram
             }
 
             Console.WriteLine();
-            return choices.Select(x => x.Item1).ToList().IndexOf(currentChoice);
+            return choices.First(x => x.choiceLetter == currentChoice).choiceAction;
         }
     }
 }

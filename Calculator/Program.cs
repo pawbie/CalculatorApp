@@ -12,7 +12,7 @@ namespace CalculatorProgram
         {
             // Declare main variables
             bool endApp = false;
-            int mainMenuChoice = 0;
+            string mainMenuChoice = "";
             
             while (!endApp)
             {
@@ -21,11 +21,14 @@ namespace CalculatorProgram
 
                 switch (mainMenuChoice)
                 {
-                    case 0:
+                    case "mathOperation":
                         CalculatorLogic.HandleMathOperation();
                         break;
-                    case 1:
+                    case "printCalculations":
                         CalculatorLogic.PrintCalculationsSummary();
+                        break;
+                    case "deleteCalculations":
+                        CalculatorLogic.ClearCalculationsHistory();
                         break;
                     default:
                         endApp = true;

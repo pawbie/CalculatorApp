@@ -33,6 +33,12 @@ namespace CalculatorProgram
             }
         }
 
+        public void ClearCompletedCalculations()
+        {
+            _completedCalculations.Clear();
+            OperationsCount = 0;
+        }
+
         private void InitializeDiagnosticTrace(string fileName)
         {
             StreamWriter logFile = File.CreateText(fileName);
@@ -63,7 +69,7 @@ namespace CalculatorProgram
             _writer.Close();
         }
 
-        public double DoOperation(double num1, double num2, int op)
+        public double DoOperation(double num1, double num2, string op)
         {
             // Default value is "not-a-number" if an operation, such as division, could result in an error.
             double result = double.NaN;
@@ -79,25 +85,25 @@ namespace CalculatorProgram
             // Use a switch statement to do the math.
             switch (op)
             {
-                case 0:
+                case "add":
                     result = num1 + num2;
                     calculation = $"{num1} + {num2}";
                     Trace.WriteLine($"{calculation} = {result}");
                     _writer.WriteValue("Add");
                     break;
-                case 1:
+                case "substract":
                     result = num1 - num2;
                     calculation = $"{num1} - {num2}";
                     Trace.WriteLine($"{calculation} = {result}");
                     _writer.WriteValue("Subtract");
                     break;
-                case 2:
+                case "multiply":
                     result = num1 * num2;
                     calculation = $"{num1} * {num2}";
                     _writer.WriteValue("Multiply");
                     Trace.WriteLine($"{calculation} = {result}");
                     break;
-                case 3:
+                case "divide":
                     // Ask the user to enter a non-zero divisor.
                     if (num2 != 0)
                     {

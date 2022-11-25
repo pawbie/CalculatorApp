@@ -15,9 +15,9 @@ namespace CalculatorProgram
             Console.WriteLine("------------------------\n");
         }
 
-        public static void ClearCurrentLine()
+        public static void ClearLine(int offsetY = 0)
         {
-            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.SetCursorPosition(0, Console.CursorTop + offsetY);
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(0, Console.CursorTop);
         }

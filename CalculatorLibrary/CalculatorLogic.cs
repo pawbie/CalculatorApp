@@ -9,20 +9,33 @@ namespace CalculatorProgram
     public class CalculatorLogic
     {
         private static Calculator calculator = new();
-        public static int GetMainMenuChoice()
+        public static string GetMainMenuChoice()
         {
             // Display title as the C# console calculator app.
             CalculatorUI.ClearScreen();
 
             // Define menu choices
+            (string, string, string)[] menuChoices;
             string menuChoiceMessage = "Choose action from follow menu items:";
-            (string, string)[] menuChoices = new[]
+            if (calculator.OperationsCount > 0)
+            {
+                menuChoices = new[]
                 {
-                    ("a", "Perform math operation"),
-                    ("b", "Print completed calculations"),
-                    ("c", "Close application")
+                    ("a", "Perform math operation", "mathOperation"),
+                    ("b", "Print completed calculations", "printCalculations"),
+                    ("c", "Delete completed calculations", "deleteCalculations"),
+                    ("d", "Close application", "exitApp")
                 };
-
+            }
+            else
+            {
+                menuChoices = new[]
+                {
+                    ("a", "Perform math operation", "mathOperation"),
+                    ("b", "Close application", "exitApp")
+                };
+            }
+            
             return UserInput.PromptChoice(menuChoiceMessage, menuChoices);
         }
 
@@ -44,6 +57,17 @@ namespace CalculatorProgram
             Console.WriteLine($"Total: {calculator.OperationsCount}");
         }
 
+        public static void ClearCalculationsHistory()
+        {
+            CalculatorUI.ClearScreen();
+
+            var clearHistory = UserInput.PromptContinue("Are you sure you want to delete completed calculations?");
+            if (clearHistory == true)
+            {
+                calculator.ClearCompletedCalculations();
+            }
+        }
+
         public static void HandleMathOperation()
         {
             // Display title as the C# console calculator app.
@@ -62,14 +86,14 @@ namespace CalculatorProgram
 
             // Ask the user to choose an operator.
             string operationChoiceMessage = "Choose an operator from the following list:";
-            (string, string)[] operationChoices = new[]
+            (string, string, string)[] operationChoices = new[]
                 {
-                    ("a", "Add"),
-                    ("s", "Substract"),
-                    ("m", "Multiply"),
-                    ("d", "Divide")
+                    ("a", "Add", "add"),
+                    ("s", "Substract", "substract"),
+                    ("m", "Multiply", "multiply"),
+                    ("d", "Divide", "divide")
                 };
-            int op = UserInput.PromptChoice(operationChoiceMessage, operationChoices);
+            string op = UserInput.PromptChoice(operationChoiceMessage, operationChoices);
 
             try
             {
