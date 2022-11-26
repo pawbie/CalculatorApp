@@ -45,6 +45,52 @@ namespace CalculatorProgram
 
             return userInput.ToLower() == "y";
         }
+        public static T PromptSelectListItem<T>(string message, T[] choiceList)
+        {
+            int selectionIndex = -1;
+            bool selectionConfirmed = false;
+
+            Console.Write(message);
+            while (selectionConfirmed == false)
+            {
+                var pressedKey = Console.ReadKey().Key;
+                switch (pressedKey)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (selectionIndex <= 0)
+                        {
+                            selectionIndex = choiceList.Length - 1;
+                        }
+                        else
+                        {
+                            selectionIndex--;
+                        }
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (selectionIndex == choiceList.Length - 1)
+                        {
+                            selectionIndex = 0;
+                        }
+                        else
+                        {
+                            selectionIndex++;
+                        }
+                        break;
+                    case ConsoleKey.Enter:
+                        if (selectionIndex >= 0) selectionConfirmed = true;
+                        break;
+                }
+
+                if (selectionIndex >= 0 && selectionConfirmed == false)
+                {
+                    CalculatorUI.ClearLine();
+                    Console.Write($"{message}{choiceList[selectionIndex]}");
+                }
+
+            }
+
+            return choiceList[selectionIndex];
+        }
 
         public static string PromptChoice(string message, (string choiceLetter, string choiceDescription, string choiceAction)[] choices)
         {

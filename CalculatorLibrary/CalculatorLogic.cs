@@ -68,6 +68,49 @@ namespace CalculatorProgram
             }
         }
 
+        public static double GetMathOperand(int operandOrder)
+        {
+            string numberSource = "";
+            double[] pastResults;
+            double definedNumber;
+
+            var header = operandOrder == 1 ? "FIRST NUMBER" : "SECOND NUMBER";
+            var choicesMessage = "Please choose preferred number source:";
+            var typeNumerMessage = "Type a number, and then press Enter: ";
+            var typeNumberErrorMessage = "This is not valid input. Please enter an integer value: ";
+            var selectNumberMessage = "Select result from previous calculations. Use UP/DOWN arrows to browse: ";
+
+            CalculatorUI.ClearScreen();
+            Console.WriteLine(header);
+            if (calculator.OperationsCount > 0)
+            {
+                var menuChoices = new[]
+                {
+                    ("a", "Type number manually", "typeNumber"),
+                    ("b", "Select result from previous operation", "selectResultNumber"),
+                };
+                numberSource = UserInput.PromptChoice(choicesMessage, menuChoices);
+            }
+
+            CalculatorUI.ClearScreen();
+            Console.WriteLine(header);
+            switch (numberSource)
+            {
+                case "typeNumber":
+                    definedNumber = UserInput.PromptTypeNumber(typeNumerMessage, typeNumberErrorMessage);
+                    break;
+                case "selectResultNumber":
+                    pastResults = calculator.ListCompletedCalculations().Select(x => x.Item2).ToArray();
+                    definedNumber = UserInput.PromptSelectListItem(selectNumberMessage, pastResults);
+                    break;
+                default:
+                    definedNumber = UserInput.PromptTypeNumber(typeNumerMessage, typeNumberErrorMessage);
+                    break;
+            }
+
+            return definedNumber;
+        }
+
         public static void HandleMathOperation()
         {
             // Display title as the C# console calculator app.
@@ -77,14 +120,11 @@ namespace CalculatorProgram
             double result = 0;
 
             // Ask the user to type the first and second number
-            string messageFirstNumber = "Type a number, and then press Enter: ";
-            string messageSecondNumber = "Type another number, and then press Enter: ";
-            string errorMessageNumber = "This is not valid input. Please enter an integer value: ";
-
-            double cleanNum1 = UserInput.PromptTypeNumber(messageFirstNumber, errorMessageNumber);
-            double cleanNum2 = UserInput.PromptTypeNumber(messageSecondNumber, errorMessageNumber);
+            double cleanNum1 = GetMathOperand(1);
+            double cleanNum2 = GetMathOperand(2);
 
             // Ask the user to choose an operator.
+            CalculatorUI.ClearScreen();
             string operationChoiceMessage = "Choose an operator from the following list:";
             (string, string, string)[] operationChoices = new[]
                 {
