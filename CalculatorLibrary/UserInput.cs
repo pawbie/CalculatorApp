@@ -94,9 +94,13 @@ namespace CalculatorProgram
 
         public static string PromptChoice(string message, (string choiceLetter, string choiceDescription, string choiceAction)[] choices)
         {
-            bool choiceConfirmed;
-            bool choiceCorrect;
-            string currentChoice = "";
+            // Get array of choiceLetters only
+            string[] choiceLetters = choices.Select(x => x.choiceLetter).ToArray();
+
+            // Setup initial valus for validation variables
+            var choiceConfirmed = false;
+            var choiceCorrect = false;
+            var currentChoice = "";
 
             // Print initial messages
             Console.WriteLine(message);
@@ -108,43 +112,22 @@ namespace CalculatorProgram
             Console.Write($"Your option: {currentChoice}");
 
             // Loop until key with one of allowed letters is pressed
-            choiceConfirmed = false;
             while (choiceConfirmed == false)
             {
-                choiceCorrect = false;
-                while (choiceCorrect == false)
+                var userChoice = Console.ReadKey(true);
+                if (userChoice.Key == ConsoleKey.Enter)
                 {
-                    var userChoice = Console.ReadKey(true).KeyChar.ToString();
-                    if (choices.Select(x => x.choiceLetter).ToArray().Contains(userChoice))
-                    {
-                        currentChoice = userChoice;
+                    if (choiceCorrect) choiceConfirmed = true;
+                }
+                else if (choiceLetters.Contains(userChoice.KeyChar.ToString()))
+                {
+                    currentChoice = userChoice.KeyChar.ToString();
 
-                        CalculatorUI.ClearLine();
-                        Console.Write($"Your option: {currentChoice}");
-                        choiceCorrect = true;
-                    }
+                    CalculatorUI.ClearLine();
+                    Console.Write($"Your option: {currentChoice}");
+                    choiceCorrect = true;
                 }
 
-
-                choiceCorrect = false;
-                while (choiceCorrect == false)
-                {
-                    var userConfirmationChoice = Console.ReadKey(true);
-                    if (userConfirmationChoice.Key == ConsoleKey.Enter)
-                    {
-                        choiceCorrect = true;
-                        choiceConfirmed = true;
-                    }
-                    else if (choices.Select(x => x.choiceLetter).ToArray().Contains(userConfirmationChoice.KeyChar.ToString()))
-                    {
-                        currentChoice = userConfirmationChoice.KeyChar.ToString();
-
-                        CalculatorUI.ClearLine();
-                        Console.Write($"Your option: {currentChoice}");
-                        choiceCorrect = true;
-
-                    }
-                }
             }
 
             Console.WriteLine();
